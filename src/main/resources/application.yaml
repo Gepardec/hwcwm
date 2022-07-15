@@ -1,0 +1,23 @@
+quarkus:
+  package:
+    output-name: "hwcwm-meetup"
+
+  http:
+    port: 8080
+    root-path: "/"
+
+  swagger-ui:
+    always-include: true
+
+  liquibase:
+    change-log: "db/changelog-master.xml"
+    migrate-at-start: false
+
+  quarkus:
+    datasource:
+      db-kind: "postgresql"
+      username: "hwcwm"
+      password: "hwcwm"
+      jdbc:
+        url: "jdbc:postgresql://localhost:5432/hwcwm"
+
