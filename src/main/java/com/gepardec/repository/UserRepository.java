@@ -8,7 +8,6 @@ import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 @RequestScoped
-@Transactional
 public class UserRepository implements PanacheRepository<User> {
 
     public User getUser(String username) {

@@ -9,9 +9,11 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -21,7 +23,6 @@ public class UserNoteResource {
 
     @Inject
     UserNoteService userNoteService;
-
 
     @GET
     @Path("user/{user}")
@@ -34,10 +35,9 @@ public class UserNoteResource {
     @Path("/user")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public User createUser(User user){
+    public User createUser(User user) {
         return userNoteService.createUser(user);
     }
-
 
     @GET
     @Path("note/{user}")
@@ -50,7 +50,23 @@ public class UserNoteResource {
     @Path("/note/{user}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Note createNote(Note note, @PathParam("user") String username){
-        return userNoteService.createNote(note, username);
+    public Note createNote(@PathParam("user") String username, @QueryParam("content") String content) {
+        return userNoteService.createNote(username, content);
+    }
+
+    @PUT
+    @Path("/note/{noteId}/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Note updateNote(@PathParam("noteId") long noteId, @QueryParam("content") String content) {
+        return userNoteService.updateContent(noteId, content);
+    }
+
+    @GET
+    @Path("/note/{noteId}/is-edited")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean isNoteEdited(@PathParam("noteId") long noteId) {
+        return userNoteService.isEdited(noteId);
     }
 }
