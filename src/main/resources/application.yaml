@@ -9,15 +9,17 @@ quarkus:
   swagger-ui:
     always-include: true
 
-  datasource:
-    db-kind: "postgresql"
-    username: "hwcwm"
-    password: "hwcwm"
-    jdbc:
-      url: "jdbc:postgresql://localhost:5432/hwcwm"
+"%dev":
+  quarkus:
+    datasource:
+      db-kind: "postgresql"
+      username: "hwcwm"
+      password: "hwcwm"
+      jdbc:
+        url: "jdbc:postgresql://localhost:5432/hwcwm"
 
-  hibernate-orm:
-    sql-load-script: "db/init.sql"
-    database:
-      generation: "drop-and-create"
+    hibernate-orm:
+      sql-load-script: "db/init.sql"
+      database:
+        generation: "drop-and-create"
 
