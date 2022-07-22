@@ -32,6 +32,14 @@ public class Note {
         this.id = id;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public LocalDateTime getCreationTimestamp() {
         return creationTimestamp;
     }
