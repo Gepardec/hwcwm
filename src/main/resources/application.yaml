@@ -6,9 +6,6 @@ quarkus:
     port: 8080
     root-path: "/"
 
-  swagger-ui:
-    always-include: true
-
 "%dev":
   quarkus:
     datasource:
@@ -22,4 +19,3 @@ quarkus:
       sql-load-script: "db/init.sql"
       database:
         generation: "drop-and-create"
-
