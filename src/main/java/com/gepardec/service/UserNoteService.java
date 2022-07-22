@@ -29,10 +29,17 @@ public class UserNoteService {
 
     public User createUser(User user) {
         userRepository.persist(user);
-        return userRepository.find(user.getName()).firstResult();
+        return userRepository.find("username", user.getName()).firstResult();
     }
 
-    public Note createNote(Note note) {
+    public Note createNote(Note note, String username) {
+        User user = getUserByUsername(username);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User must be set.");
+        }
+        note.setOwner(user);
+
         noteRepository.persist(note);
         return noteRepository.findById(note.getId());
     }

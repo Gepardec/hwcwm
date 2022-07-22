@@ -1,5 +1,7 @@
 package com.gepardec.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,7 @@ public class Note {
     private LocalDateTime lastEditTimestamp;
     @ManyToOne
     @JoinColumn(name = "owner_ID")
+    @JsonIgnore
     private User owner;
 
 
