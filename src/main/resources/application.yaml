@@ -9,15 +9,15 @@ quarkus:
   swagger-ui:
     always-include: true
 
-  liquibase:
-    change-log: "db/changelog-master.xml"
-    migrate-at-start: false
+  datasource:
+    db-kind: "postgresql"
+    username: "hwcwm"
+    password: "hwcwm"
+    jdbc:
+      url: "jdbc:postgresql://localhost:5432/hwcwm"
 
-  quarkus:
-    datasource:
-      db-kind: "postgresql"
-      username: "hwcwm"
-      password: "hwcwm"
-      jdbc:
-        url: "jdbc:postgresql://localhost:5432/hwcwm"
+  hibernate-orm:
+    sql-load-script: "db/init.sql"
+    database:
+      generation: "drop-and-create"
 
