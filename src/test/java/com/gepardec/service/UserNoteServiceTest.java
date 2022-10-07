@@ -4,21 +4,21 @@ import com.gepardec.model.Note;
 import com.gepardec.model.User;
 import com.gepardec.repository.NoteRepository;
 import com.gepardec.repository.UserRepository;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
@@ -68,7 +68,9 @@ class UserNoteServiceTest {
     void createUser() {
         // given
         doNothing().when(userRepository).persist(any(User.class));
-        when(userRepository.find(eq("username"), anyString()).firstResult()).thenReturn(createUserMock());
+        PanacheQuery<User> query = mock(PanacheQuery.class);
+        when(query.firstResult()).thenReturn(createUserMock());
+        when(userRepository.find("username", USER_NAME)).thenReturn(query);
 
         // when
         User user = userNoteService.createUser(createUserMock());
@@ -83,7 +85,7 @@ class UserNoteServiceTest {
         doNothing().when(noteRepository).persist(any(Note.class));
         User user = createUserMock();
         when(userRepository.getUser(USER_NAME)).thenReturn(user);
-        when(userRepository.findById(1L)).thenReturn(user);
+        when(noteRepository.findById(1L)).thenReturn(createNoteMock());
 
         // when
         Note note = userNoteService.createNote(USER_NAME, NOTE_CONTENT);
@@ -96,15 +98,15 @@ class UserNoteServiceTest {
     @Test
     void updateContent() {
         // given
-        when(noteRepository.findById(anyLong())).thenReturn(createNoteMock());
-        doNothing().when(noteRepository).persist(any(Note.class));
+        doAnswer((invocationOnMock) -> null).when(noteRepository).persist(any(Note.class));
+        when(noteRepository.findById(1L)).thenReturn(createNoteMock());
 
         // when
         Note note = userNoteService.updateContent(1L, UPDATED_NOTE_CONTENT);
 
         // then
         assertThat(note.getContent()).isEqualTo(UPDATED_NOTE_CONTENT);
-        assertThat(note.getLastEditTimestamp().truncatedTo(ChronoUnit.SECONDS)).isAfter(note.getCreationTimestamp().truncatedTo(ChronoUnit.SECONDS));
+        assertThat(note.getLastEditTimestamp()).isAfter(note.getCreationTimestamp());
     }
 
     @Test
@@ -148,6 +150,7 @@ class UserNoteServiceTest {
     private Note createNoteMock() {
         LocalDateTime now = LocalDateTime.now();
         Note note = new Note();
+        note.setId(1L);
         note.setContent("Hallo Test");
         note.setCreationTimestamp(now);
         note.setLastEditTimestamp(now);

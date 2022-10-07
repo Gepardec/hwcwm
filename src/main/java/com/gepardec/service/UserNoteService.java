@@ -54,7 +54,7 @@ public class UserNoteService {
         note.setContent(content);
 
         noteRepository.persist(note);
-        return noteRepository.findById(note.getId());
+        return note;
     }
 
     @Transactional
